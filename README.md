@@ -23,26 +23,6 @@ git clone https://github.com/inspironman/Smart-Content-Moderator.git
 cd smart-content-moderator
 ```
 
-### 2. Create `.gitignore` in the Project Root
-
-```
-# Python
-__pycache__/
-.env
-.venv/
-venv/
-database.db
-
-# Editors
-.vscode/
-
-# Misc
-*.log
-*.pid
-*.seed
-*.pid.lock
-```
-
 ### 3. Install Dependencies
 
 ```
@@ -68,10 +48,6 @@ uvicorn app.main:app --reload
 ```
 
 Visit [http://localhost:8000](http://localhost:8000)
-
-### 6. Access the API Docs
-
-Go to [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ---
 

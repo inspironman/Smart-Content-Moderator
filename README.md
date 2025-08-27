@@ -21,7 +21,7 @@ A FastAPI-based web application for moderating user-generated text and image con
 ### 1. Clone the Repo
 
 ```
-git clone https://github.com/YOURUSERNAME/smart-content-moderator.git
+git clone https://github.com/inspironman/Smart-Content-Moderator.git
 cd smart-content-moderator
 ```
 

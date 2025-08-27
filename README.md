@@ -121,6 +121,180 @@ Once running, visit [http://localhost:8000](http://localhost:8000) in your brows
 Make sure your `.env` file exists with required secrets and is included via `--env-file` to provide environment variables inside the container.
 
 ---
+
+# API Endpoint: Moderate Text
+
+**Method:** POST  
+**URL:** [http://127.0.0.1:8000/api/v1/moderate/text](http://127.0.0.1:8000/api/v1/moderate/text)  
+
+---
+
+### Description
+
+This endpoint is designed to classify and moderate text content submitted by users. It accepts a JSON payload containing an email address and the text to be analyzed.
+
+---
+
+### Request Parameters
+
+The request body must be in JSON format and include the following parameters:
+
+| Parameter | Type   | Description                         |
+|-----------|--------|-------------------------------------|
+| email     | string | The email address of the user submitting the text. |
+| text      | string | The text content that needs to be moderated.       |
+
+---
+
+### Example Request Body
+{
+"email": "user@example.com",
+"text": "Sample text to moderate."
+}
+
+
+---
+
+### Expected Response
+
+Upon successful processing, the API will return a JSON response with the following structure:
+
+| Field          | Type    | Description                                  |
+|----------------|---------|----------------------------------------------|
+| classification | string  | The classification result of the moderated text. |
+| confidence     | number  | A confidence score indicating the reliability of the classification. |
+| reasoning      | string  | An explanation of the classification result. |
+
+---
+
+### Example Response
+
+{
+"classification": "profanity",
+"confidence": 0.95,
+"reasoning": "Content flagged as profanity with confidence 0.95"
+}
+
+# API Endpoint: Moderate Image
+
+**Method:** POST  
+**URL:** [http://127.0.0.1:8000/api/v1/moderate/image](http://127.0.0.1:8000/api/v1/moderate/image)  
+
+---
+
+### Description
+
+This endpoint accepts an image file uploaded by users and analyzes it for inappropriate content such as nudity, weapons, alcohol, or drugs. The image is processed and classified accordingly.
+
+---
+
+### Request Parameters
+
+The request body should be sent as multipart/form-data and include the following parameters:
+
+| Parameter | Type | Description                          |
+|-----------|------|------------------------------------|
+| email     | string | The email address of the user submitting the image. |
+| file      | file  | The image file to be moderated (e.g., PNG, JPEG). |
+
+---
+
+### Example Request (multipart/form-data)
+
+| Key   | Value                     | Type  |
+|-------|---------------------------|-------|
+| email | user@example.com          | Text  |
+| file  | [Select image file here]  | File  |
+
+---
+
+### Expected Response
+
+Upon successful processing, the API will return a JSON response with the following structure:
+
+| Field          | Type    | Description                                  |
+|----------------|---------|----------------------------------------------|
+| classification | string  | The classification result of the moderated image. |
+| confidence     | number  | A confidence score indicating the reliability of the classification. |
+| reasoning      | string  | An explanation of the classification result. |
+
+---
+
+### Example Response
+
+{
+"classification": "inappropriate",
+"confidence": 0.87,
+"reasoning": "Nudity detected with confidence 0.87"
+}
+
+# API Endpoint: Analytics Summary
+
+**Method:** GET  
+**URL:** [http://127.0.0.1:8000/api/v1/analytics/summary](http://127.0.0.1:8000/api/v1/analytics/summary)  
+
+---
+
+### Description
+
+This endpoint provides a summary of moderation analytics for a specified user. It returns counts of different classification categories and the total number of moderation requests made by the user.
+
+---
+
+### Query Parameters
+
+| Parameter | Type   | Description                 |
+|-----------|--------|-----------------------------|
+| user      | string | The email address of the user for whom the analytics are requested. |
+
+---
+
+### Example Request
+
+GET /api/v1/analytics/summary?user=pacoke5840@namestal.com
+
+
+---
+
+### Expected Response
+
+Upon successful processing, the API will return a JSON response summarizing the user’s moderation activity.
+
+| Field                | Type    | Description                                    |
+|----------------------|---------|------------------------------------------------|
+| email                | string  | The email address of the user.                 |
+| total_requests       | integer | Total number of moderation requests made.      |
+| classification_counts | object  | Count of moderation requests by classification category. |
+
+---
+
+### Example Response
+
+{
+"email": "pacoke5840@namestal.com",
+"total_requests": 37,
+"classification_counts": {
+"drug": 1,
+"profanity": 15,
+"safe": 21
+}
+}
+
+### Status Codes
+
+| Code               | Description                                                                                                         |
+|--------------------|---------------------------------------------------------------------------------------------------------------------|
+| **200 OK**         | The request was successful, and the response contains the requested data or confirmation.                          |
+| **400 Bad Request** | The request could not be understood or was missing required parameters (e.g., missing or invalid user parameter).    |
+| **401 Unauthorized**| Authentication failed or the user does not have permission for the requested action (e.g., missing or invalid API key).|
+| **403 Forbidden**   | The request is valid but the server is refusing to fulfill it, often due to insufficient permissions.               |
+| **404 Not Found**   | The requested resource or endpoint does not exist.                                                                  |
+| **429 Too Many Requests** | The user has sent too many requests in a given amount of time (rate limiting).                                  |
+| **500 Internal Server Error** | An unexpected error occurred on the server. Client should retry later or contact support.                    |
+| **503 Service Unavailable**  | The server is currently unavailable due to maintenance or overload.                                             |
+
+---
+
 ## License
 
 This project is for educational and internship demonstration purposes.

@@ -6,34 +6,39 @@ import requests
 
 load_dotenv()
 
-api_user = os.getenv("SIGHTENGINE_API_USER")
-api_secret = os.getenv("SIGHTENGINE_API_SECRET")
+api_user = os.getenv("SIGHTENGINE_API_USER").strip()
+api_secret = os.getenv("SIGHTENGINE_API_SECRET").strip()
+
 client = SightengineClient(api_user, api_secret)
 
 def moderate_text_sightengine(text: str, lang="en"):
     url = "https://api.sightengine.com/1.0/text/check.json"
     data = {
-        "text": text,
-        "lang": lang,
-        "categories": "toxic, spam, harassment, safe, personal, link, extremism, violence, self-harm",
-        "mode": "rules",
-        "api_user": api_user,
-        "api_secret": api_secret,
+        'text': text,
+        'mode': 'rules',  # or 'ml' if supported
+        'lang': lang,
+        'categories': 'profanity,personal,link,drug,weapon,spam,content-trade,money-transaction,extremism,violence,self-harm,medical',
+        'api_user': api_user,
+        'api_secret': api_secret,
     }
+
     response = requests.post(url, data=data)
-    result = response.json()
+    output = response.json()
+
+    # Check for errors
+    if output.get('status') != 'success':
+        raise Exception(f"Moderation failed: {output.get('error', {}).get('message', 'Unknown error')}")
 
     flagged_categories = []
-    # Skip 'status' and 'request' keys
-    for category, details in result.items():
-        if category in ("status", "request"):
+    for category, details in output.items():
+        if category in ('status', 'request', 'error'):
             continue
-        if "matches" in details and details["matches"]:
+        if isinstance(details, dict) and details.get('matches', False):
             flagged_categories.append(category)
 
     if flagged_categories:
         classification = ",".join(flagged_categories)
-        confidence = 0.9  # heuristic confidence
+        confidence = 0.9  # heuristic since rules mode doesn't provide probabilities
         reasoning = f"Flagged categories detected: {classification}"
     else:
         classification = "safe"
@@ -44,7 +49,7 @@ def moderate_text_sightengine(text: str, lang="en"):
         "classification": classification,
         "confidence": confidence,
         "reasoning": reasoning,
-        "llm_response": str(result),
+        "raw_response": output,
     }
 
 
@@ -82,3 +87,6 @@ def moderate_image_sightengine(image_bytes: bytes):
         "reasoning": reasoning,
         "llm_response": str(result),
     }
+
+
+ 

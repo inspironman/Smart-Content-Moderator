@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - SIGHTENGINE_API_USER=${SIGHTENGINE_API_USER}
+      - SIGHTENGINE_API_SECRET=${SIGHTENGINE_API_SECRET}
+      # Add other env vars as needed
+    volumes:
+      - ./:/app  # Optional: mount current dir for live reload in dev

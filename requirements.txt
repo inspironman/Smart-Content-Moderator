@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+sqlmodel
+httpx
+python-dotenv
+python-multipart
+sightengine
+pydantic[email]
+requests
+sendgrid
+

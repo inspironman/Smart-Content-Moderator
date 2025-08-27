@@ -11,8 +11,6 @@ A FastAPI-based web application for moderating user-generated text and image con
 - **Automated Email Alerts:** Notify users or moderators via SendGrid when flagged content is detected.
 - **Background Processing:** Asynchronous email sending so moderation actions are not delayed.
 - **Usage Analytics:** Track moderation requests and outcomes for each user.
-- **Security:** Sensitive environment variables, database files, and cache artifacts excluded from version control with `.gitignore`.
-- **OpenAPI Docs:** Interactive API docs available via FastAPI.
 
 ---
 
